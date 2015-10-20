@@ -529,57 +529,57 @@ namespace ImageManipulator
 	//End Image Splitters
 
 	//Image Compressors
-	//Compress image given a sub-image variance threshold
-	void PortableGrayMap::compressImage(int varianceThreshold)
+	////Compress image given a sub-image variance threshold
+	//void PortableGrayMap::compressImage(int varianceThreshold)
+	//{
+
+	//	//Check if the width is greater than 1
+	//	if (this->width > 1)
+	//	{
+
+	//		//If the image is more uniform the variance threshold it is filled with the average value
+	//		if (this->imageVariance() <= (double)varianceThreshold)
+	//		{
+	//			this->fillImage(this->imageMean());
+	//		}
+
+	//		//If the image is less uniform the variance threshold it is split horizontally and recursively compressed
+	//		else if (this->imageVariance() > (double)varianceThreshold)
+	//		{
+	//			this->compressImage(varianceThreshold, 0, this->width / 2);
+	//			this->compressImage(varianceThreshold, this->width / 2, this->width);
+	//		}
+	//	}
+	//}
+
+	//Compress and return image given a sub-image variance threshold
+	PortableGrayMap PortableGrayMap::compressImage(int varianceThreshold)
 	{
-
+	
+		//Create a default image
+		PortableGrayMap compressedImage = PortableGrayMap(*this);
+	
 		//Check if the width is greater than 1
-		if (this->width > 1)
+		if(this->width > 1)
 		{
-
+	
 			//If the image is more uniform the variance threshold it is filled with the average value
-			if (this->imageVariance() <= (double)varianceThreshold)
+			if(this->imageVariance() <= (double) varianceThreshold)
 			{
-				this->fillImage(this->imageMean());
+				compressedImage.fillImage(this->imageMean());
 			}
-
+	
 			//If the image is less uniform the variance threshold it is split horizontally and recursively compressed
-			else if (this->imageVariance() > (double)varianceThreshold)
+			else if(this->imageVariance() > (double) varianceThreshold)
 			{
-				this->compressImage(varianceThreshold, 0, this->width / 2);
-				this->compressImage(varianceThreshold, this->width / 2, this->width);
+				std::vector<PortableGrayMap> halves = this->splitImageHorizontally();
+				PortableGrayMap left = this->compressImage(halves[0], varianceThreshold);
+				PortableGrayMap right = this->compressImage(halves[1], varianceThreshold);
+				compressedImage = this->combineImageHorizontally(left, right);
 			}
 		}
+		return (compressedImage);
 	}
-
-	//	//Compress and return image given a sub-image variance threshold
-	//	PortableGrayMap PortableGrayMap::compressImage(int varianceThreshold)
-	//	{
-	//
-	//		//Create a default image
-	//		PortableGrayMap compressedImage = PortableGrayMap(*this);
-	//
-	//		//Check if the width is greater than 1
-	//		if(this->width > 1)
-	//		{
-	//
-	//			//If the image is more uniform the variance threshold it is filled with the average value
-	//			if(this->imageVariance() <= (double) varianceThreshold)
-	//			{
-	//				compressedImage.fillImage(this->imageMean());
-	//			}
-	//
-	//			//If the image is less uniform the variance threshold it is split horizontally and recursively compressed
-	//			else if(this->imageVariance() > (double) varianceThreshold)
-	//			{
-	//				std::vector<PortableGrayMap> halves = this->splitImageHorizontally();
-	//				PortableGrayMap left = this->compressImage(halves[0], varianceThreshold);
-	//				PortableGrayMap right = this->compressImage(halves[1], varianceThreshold);
-	//				compressedImage = this->combineImageHorizontally(left, right);
-	//			}
-	//		}
-	//		return (compressedImage);
-	//	}
 
 	//Compress image given a sub-image variance threshold and a start and end column index
 	void PortableGrayMap::compressImage(int varianceThreshold, int start, int end)
@@ -704,32 +704,32 @@ namespace ImageManipulator
 		}
 	}
 
-	//	//Compress and return image given an image and a sub-image variance threshold
-	//	PortableGrayMap PortableGrayMap::compressImage(PortableGrayMap originalImage, int varianceThreshold)
-	//	{
-	//
-	//		//Create a default image
-	//		PortableGrayMap compressedImage = PortableGrayMap(originalImage);
-	//		if(originalImage.getWidth() > 1)
-	//		{
-	//
-	//			//If the image is more uniform the variance threshold it is filled with the average value
-	//			if(originalImage.imageVariance() <= (double) varianceThreshold)
-	//			{
-	//				compressedImage.fillImage(originalImage.imageMean());
-	//			}
-	//
-	//			//If the image is less uniform the variance threshold it is split horizontally and recursively compressed
-	//			else if(originalImage.imageVariance() > (double) varianceThreshold)
-	//			{
-	//				std::vector<PortableGrayMap> halves = originalImage.splitImageHorizontally();
-	//				PortableGrayMap left = originalImage.compressImage(halves[0], varianceThreshold);
-	//				PortableGrayMap right = originalImage.compressImage(halves[1], varianceThreshold);
-	//				compressedImage = originalImage.combineImageHorizontally(left, right);
-	//			}
-	//		}
-	//		return (compressedImage);
-	//	}
+	//Compress and return image given an image and a sub-image variance threshold
+	PortableGrayMap PortableGrayMap::compressImage(PortableGrayMap originalImage, int varianceThreshold)
+	{
+	
+		//Create a default image
+		PortableGrayMap compressedImage = PortableGrayMap(originalImage);
+		if(originalImage.getWidth() > 1)
+		{
+	
+			//If the image is more uniform the variance threshold it is filled with the average value
+			if(originalImage.imageVariance() <= (double) varianceThreshold)
+			{
+				compressedImage.fillImage(originalImage.imageMean());
+			}
+	
+			//If the image is less uniform the variance threshold it is split horizontally and recursively compressed
+			else if(originalImage.imageVariance() > (double) varianceThreshold)
+			{
+				std::vector<PortableGrayMap> halves = originalImage.splitImageHorizontally();
+				PortableGrayMap left = originalImage.compressImage(halves[0], varianceThreshold);
+				PortableGrayMap right = originalImage.compressImage(halves[1], varianceThreshold);
+				compressedImage = originalImage.combineImageHorizontally(left, right);
+			}
+		}
+		return (compressedImage);
+	}
 	//End Image Compressors
 
 	//Image Quantizer

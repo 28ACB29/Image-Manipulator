@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 		ImageManipulator::PortableGrayMap originalImage = ImageManipulator::PortableGrayMap(data, width, height, maxValue);
 
 		//Compress image
-		originalImage.compressImage(varianceThreshold);
+		ImageManipulator::PortableGrayMap compressedImage = originalImage.compressImage(varianceThreshold);
 
 		//Quantize image
 		ImageManipulator::PortableGrayMap quantizedImage = originalImage.quantizeImage(intervals);
@@ -161,10 +161,14 @@ int main(int argc, char *argv[])
 		//Generate error image
 		ImageManipulator::PortableGrayMap errorImage = originalImage.imageError(quantizedImage);
 
+		//Display image statistics
+		std::cout << "Quantized Image Distortion: " << originalImage.imageDistortion(quantizedImage) << std::endl;
+		std::cout << "Quantized Image Bit Rate: " << quantizedImage.imageBitRate(intervals) << std::endl;
+
 		//Write to output files
 		std::ofstream compressedImageFile;
 		compressedImageFile.open(compressedImageName.data(), std::ofstream::out);
-		compressedImageFile << originalImage.toString();
+		compressedImageFile << compressedImage.toString();
 		std::ofstream quantizedImageFile;
 		quantizedImageFile.open(quantizedImageName.data(), std::ofstream::out);
 		quantizedImageFile << quantizedImage.toString();
@@ -176,7 +180,6 @@ int main(int argc, char *argv[])
 		compressedImageFile.close();
 		quantizedImageFile.close();
 		errorImageFile.close();
-		std::cout << "Quantized Image Distortion: " << originalImage.imageDistortion(quantizedImage) << std::endl;
-		std::cout << "Quantized Image Bit Rate: " << quantizedImage.imageBitRate(intervals) << std::endl;
 		return (0);
+	}
 }

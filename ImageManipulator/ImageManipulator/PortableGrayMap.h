@@ -74,11 +74,11 @@ namespace ImageManipulator
 		//End Image Splitters
 
 		//Image Compressors
-		//Compress image given a sub-image variance threshold
-		void compressImage(int varianceThreshold);
+		////Compress image given a sub-image variance threshold
+		//void compressImage(int varianceThreshold);
 
-		//		//Compress and return image given a sub-image variance threshold
-		//		PortableGrayMap compressImage(int varianceThreshold);
+		//Compress and return image given a sub-image variance threshold
+		PortableGrayMap compressImage(int varianceThreshold);
 
 		//Compress image given a sub-image variance threshold and a start and end column index
 		void compressImage(int varianceThreshold, int start, int end);
@@ -86,8 +86,8 @@ namespace ImageManipulator
 		//Compress image given a sub-image variance threshold a start and end row index and a start and end column index
 		void compressImage(int varianceThreshold, int rStart, int rEnd, int cStart, int cEnd);
 
-		//		//Compress and return image given an image and a sub-image variance threshold
-		//		PortableGrayMap compressImage(PortableGrayMap image, int varianceThreshold);
+		//Compress and return image given an image and a sub-image variance threshold
+		PortableGrayMap compressImage(PortableGrayMap image, int varianceThreshold);
 		//End Image Compressors
 
 		//Image Quantizer
